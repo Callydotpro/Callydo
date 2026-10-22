@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Cally — Callout writer",
+  "version": "0.6.0",
+  "description": "Turn a website or tweet into a clear, editable pump.fun callout.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "clipboardWrite",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:4317/*",
+    "https://pump.fun/*",
+    "https://www.pump.fun/*",
+    "https://larpcheck.app/*",
+    "https://trade.padre.gg/*"
+  ],
+  "background": {
+    "service_worker": "chart-worker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://pump.fun/*",
+        "https://www.pump.fun/*",
+        "https://trade.padre.gg/*"
+      ],
+      "js": [
+        "terminal-source.js",
+        "panel-move.js",
+        "chart.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Write a callout with Cally"
+  }
+}
