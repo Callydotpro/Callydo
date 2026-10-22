@@ -1,12 +1,15 @@
 import {API_BASE} from './api-config.js';
+import {hasConsent} from './consent.js';
+chrome.runtime.onInstalled.addListener(async()=>{if(!await hasConsent())chrome.tabs.create({url:chrome.runtime.getURL('welcome.html')});});
 import './detached-worker.js';
 import {currentCoin} from './chart-route.js';
 import {lookupLarp} from './larp-worker.js';
 const inflight=new Map();
 chrome.runtime.onMessage.addListener((message,sender,reply)=>{
-  if(message.type==='cally-larp') {lookupLarp(message,sender).then(reply,()=>reply({label:'Unavailable'}));return true;}
+  if(message.type==='cally-larp') {hasConsent().then(ok=>ok?lookupLarp(message,sender):{label:'Open Cally to enable'}).then(reply,()=>reply({label:'Unavailable'}));return true;}
   if(message.type!=='cally-chart') return;
   (async()=>{
+  if(!await hasConsent())return {error:'Open the Cally extension to finish setup.'};
   const mint=await currentCoin(message,sender,chrome.tabs);
   if(!mint) return {retry:true};
   const key=sender.tab.id+':'+mint;

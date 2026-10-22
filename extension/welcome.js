@@ -1,0 +1,1 @@
+document.getElementById('accept').onclick=async()=>{await chrome.storage.local.set({callyConsentV1:true});document.getElementById('accept').disabled=true;document.getElementById('status').textContent='Cally is ready. Open a supported coin chart, or reopen the extension on a website.';};

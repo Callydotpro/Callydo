@@ -1,4 +1,5 @@
 import {API_BASE} from './api-config.js';
+import {hasConsent} from './consent.js';
 import {extractPage} from './extract.js';
 const $ = id => document.getElementById(id);
 let source;
@@ -29,6 +30,7 @@ $('useSource').onclick = () => {
 };
 async function init() {
   try {
+    if(!await hasConsent()){await chrome.tabs.create({url:chrome.runtime.getURL('welcome.html')});status('Finish setup in the Cally welcome tab.');return;}
     const saved = await chrome.storage.local.get('writerId');
     writerId = saved.writerId || crypto.randomUUID();
     if(!saved.writerId) await chrome.storage.local.set({writerId});
