@@ -1,0 +1,15 @@
+import {cp,mkdir,readFile,writeFile} from 'node:fs/promises';
+import path from 'node:path';
+const endpoint=new URL(process.env.CALLY_PUBLIC_API_URL || 'http://invalid');
+if(endpoint.protocol!=='https:' || endpoint.username || endpoint.password || endpoint.pathname!=='/' || endpoint.search || endpoint.hash || ['localhost','invalid','127.0.0.1'].includes(endpoint.hostname))throw Error('Set CALLY_PUBLIC_API_URL to the deployed HTTPS API origin first.');
+const output=path.resolve('dist','cally-store-'+Date.now());
+await mkdir(output,{recursive:true});
+const files=['api-config.js','chart.js','chart-route.js','chart-worker.js','detached-worker.js','detached.html','detached.css','detached.js','extract.js','larp-api.js','larp-worker.js','panel-move.js','popup.html','popup.css','popup.js','pump-logomark.svg','terminal-source.js'];
+for(const file of files)await cp(path.join('extension',file),path.join(output,file));
+const manifest=JSON.parse(await readFile('extension/manifest.json','utf8'));
+manifest.host_permissions=manifest.host_permissions.filter(host=>!host.startsWith('http://127.0.0.1'));
+manifest.host_permissions.push(endpoint.origin+'/*');
+await writeFile(path.join(output,'api-config.js'),'export const API_BASE = '+JSON.stringify(endpoint.origin)+';\n');
+await writeFile(path.join(output,'manifest.json'),JSON.stringify(manifest,null,2));
+console.log(output);
+console.log('Staging only: add approved icons, verify deployed API and disclosures before creating the submission ZIP.');
