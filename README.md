@@ -30,3 +30,7 @@ Set CALLY_PUBLIC_API_URL=https://cally.pro and run node scripts/stage-store.mjs.
 ## Source limitations
 
 Public X conversation data and public website HTML can be incomplete or blocked. The extension reports unavailable sources instead of inventing ratings. It reads bounded nested posts and relevant photo attachments; it does not interpret videos. LarpCheck lookup only reads existing public reports and never starts paid checks. AI wording varies without guaranteeing global uniqueness or factual accuracy; review drafts before posting.
+
+## Update the Cally contract address
+
+Edit public/brand.json in GitHub and put the Solana contract address between the quotes in the ca field, then commit to main. Leave it empty before launch. Render deploys the change; version 0.6.2 and later refresh the CA from cally.pro every minute while open. Existing 0.6.1 users need a one-time download and reload. The value is public and displayed as text, never executed. X links point to https://x.com/Callydotpro.

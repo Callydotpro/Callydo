@@ -12,10 +12,10 @@ let activeRequests = 0;
 http.createServer(async (req,res) => {
   const send = (code,data) => {res.writeHead(code,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
   if(req.method==='GET' && req.url==='/healthz') return send(200,{ok:true,generationEnabled:enabled});
-  const publicFiles={'/':['index.html','text/html; charset=utf-8'],'/privacy':['privacy.html','text/html; charset=utf-8']};
+  const publicFiles={'/brand.json':['brand.json','application/json'],'/':['index.html','text/html; charset=utf-8'],'/privacy':['privacy.html','text/html; charset=utf-8']};
   if(req.method==='GET' && publicFiles[req.url]) {
     const [file,type]=publicFiles[req.url];
-    try {const body=await readFile(new URL('./public/'+file,import.meta.url));res.writeHead(200,{'Content-Type':type,'X-Content-Type-Options':'nosniff'});return res.end(body);} catch {return send(404,{error:'Page not available.'});}
+    try {const body=await readFile(new URL('./public/'+file,import.meta.url));res.writeHead(200,{'Content-Type':type,'X-Content-Type-Options':'nosniff','Cache-Control':'no-store'});return res.end(body);} catch {return send(404,{error:'Page not available.'});}
   }
   if(req.method==='GET' && req.url==='/downloads/cally.zip') {
     if(process.env.CALLY_DOWNLOAD_ENABLED!=='true')return send(503,{error:'Download is being prepared.'});
