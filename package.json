@@ -1,0 +1,1 @@
+{"name":"cally","private":true,"type":"module","scripts":{"start":"node --env-file-if-exists=.env server.mjs","test":"node --test"},"engines":{"node":">=22"},"dependencies":{"cheerio":"^1.2.0","ipaddr.js":"^2.5.0"}}

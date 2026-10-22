@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: cally-api
+    runtime: docker
+    plan: starter
+    healthCheckPath: /healthz
+    numInstances: 1
+    disk:
+      name: cally-usage
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: CALLY_HOSTED
+        value: "true"
+      - key: CALLY_GENERATION_ENABLED
+        value: "false"
+      - key: CALLY_EXTENSION_ID
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4.1-mini
+      - key: CALLY_USAGE_DB
+        value: /var/data/usage.sqlite
+      - key: CALLY_GLOBAL_DAILY
+        value: "100"
+      - key: CALLY_INSTALLATION_DAILY
+        value: "20"

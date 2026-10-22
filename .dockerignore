@@ -1,0 +1,11 @@
+*
+!Dockerfile
+!package.json
+!package-lock.json
+!server.mjs
+!generation.mjs
+!sources.mjs
+!tweet-images.mjs
+!usage-limits.mjs
+!public/
+!public/**
