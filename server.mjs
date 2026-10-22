@@ -1,5 +1,9 @@
 import http from 'node:http';
-import {readFile} from 'node:fs/promises';
+import {readFile,writeFile,rename} from 'node:fs/promises';
+import {createHash,timingSafeEqual} from 'node:crypto';
+import path from 'node:path';
+const brandFile=process.env.CALLY_USAGE_DB?path.join(path.dirname(process.env.CALLY_USAGE_DB),'brand.json'):new URL('./public/brand.json',import.meta.url);
+const validCA=ca=>typeof ca==='string'&&(ca===''||/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(ca));
 import {UsageLimits} from './usage-limits.mjs';
 const hosted=process.env.CALLY_HOSTED==='true';
 const enabled=!hosted || process.env.CALLY_GENERATION_ENABLED==='true';
@@ -12,7 +16,18 @@ let activeRequests = 0;
 http.createServer(async (req,res) => {
   const send = (code,data) => {res.writeHead(code,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
   if(req.method==='GET' && req.url==='/healthz') return send(200,{ok:true,generationEnabled:enabled});
-  const publicFiles={'/brand.json':['brand.json','application/json'],'/':['index.html','text/html; charset=utf-8'],'/privacy':['privacy.html','text/html; charset=utf-8']};
+  if(req.method==='GET'&&req.url==='/brand.json') {try{return send(200,JSON.parse(await readFile(brandFile,'utf8')));}catch{return send(200,{ca:''});}}
+  if(req.method==='POST'&&req.url==='/admin/brand') {
+    const token=process.env.CALLY_ADMIN_TOKEN;
+    const supplied=String(req.headers.authorization||'').replace(/^Bearer /,'');
+    if(!token||!timingSafeEqual(createHash('sha256').update(supplied).digest(),createHash('sha256').update(token).digest()))return send(401,{error:'Enter your admin key.'});
+    try{let body='';for await(const chunk of req){body+=chunk;if(body.length>4096)return send(413,{error:'Request too large.'});}
+      const {ca}=JSON.parse(body);if(!validCA(ca))return send(400,{error:'Enter a valid Solana contract address, or leave it blank.'});
+      const data=JSON.stringify({ca});const temporary=typeof brandFile==='string'?brandFile+'.tmp':new URL('./public/brand.json.tmp',import.meta.url);
+      await writeFile(temporary,data,{mode:0o600});await rename(temporary,brandFile);return send(200,{ca});
+    }catch{return send(500,{error:'Could not save. Please retry.'});}
+  }
+  const publicFiles={'/admin':['admin.html','text/html; charset=utf-8'],'/':['index.html','text/html; charset=utf-8'],'/privacy':['privacy.html','text/html; charset=utf-8']};
   if(req.method==='GET' && publicFiles[req.url]) {
     const [file,type]=publicFiles[req.url];
     try {const body=await readFile(new URL('./public/'+file,import.meta.url));res.writeHead(200,{'Content-Type':type,'X-Content-Type-Options':'nosniff','Cache-Control':'no-store'});return res.end(body);} catch {return send(404,{error:'Page not available.'});}

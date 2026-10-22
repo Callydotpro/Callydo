@@ -33,4 +33,4 @@ Public X conversation data and public website HTML can be incomplete or blocked.
 
 ## Update the Cally contract address
 
-Edit public/brand.json in GitHub and put the Solana contract address between the quotes in the ca field, then commit to main. Leave it empty before launch. Render deploys the change; version 0.6.2 and later refresh the CA from cally.pro every minute while open. Existing 0.6.1 users need a one-time download and reload. The value is public and displayed as text, never executed. X links point to https://x.com/Callydotpro.
+Open https://cally.pro/admin, enter the private CALLY_ADMIN_TOKEN configured in Render, paste the Solana contract address and click Confirm. Leave blank for Not Announced. Changes persist on the Render disk in brand.json without a deployment. Open extension 0.6.2 panels refresh within five seconds. Older users need a one-time update. Never commit or share the admin key. X links point to https://x.com/Callydotpro.
