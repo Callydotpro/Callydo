@@ -10,7 +10,7 @@ for(const file of ['consent.js','welcome.html','welcome.js'])await cp(path.join(
 const manifest=JSON.parse(await readFile('extension/manifest.json','utf8'));
 const identity=JSON.parse(await readFile('scripts/release-identity.json','utf8'));
 manifest.key=identity.key;
-manifest.version='0.6.1';
+manifest.version='0.6.2';
 manifest.host_permissions=manifest.host_permissions.filter(host=>!host.startsWith('http://127.0.0.1'));
 manifest.host_permissions.push(endpoint.origin+'/*');
 await writeFile(path.join(output,'api-config.js'),'export const API_BASE = '+JSON.stringify(endpoint.origin)+';\n');
