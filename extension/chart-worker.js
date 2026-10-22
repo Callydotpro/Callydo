@@ -7,7 +7,7 @@ import {lookupLarp} from './larp-worker.js';
 const inflight=new Map();
 let brandCache=null,brandAt=0,brandJob=null;
 async function getCallyBrand(){
- if(brandCache&&Date.now()-brandAt<60000)return brandCache;
+ if(brandCache&&Date.now()-brandAt<1000)return brandCache;
  if(!brandJob)brandJob=(async()=>{try{const r=await fetch(API_BASE+'/brand.json',{cache:'no-store',signal:AbortSignal.timeout(8000)});if(!r.ok)throw Error('Brand unavailable');const d=await r.json();brandCache={ca:typeof d.ca==='string'&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(d.ca)?d.ca:''};brandAt=Date.now();return brandCache;}catch{return brandCache||{ca:''};}finally{brandJob=null;}})();
  return brandJob;
 }

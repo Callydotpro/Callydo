@@ -46,4 +46,4 @@ init();
 
 
 async function refreshCallyBrand(){try{const data=await chrome.runtime.sendMessage({type:'cally-brand'});const ca=typeof data?.ca==='string'&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(data.ca)?data.ca:'';const el=document.querySelector('[data-cally-ca]');if(el){el.textContent='Cally CA: '+(ca||'Not Announced');el.style.overflowWrap='anywhere';}}catch{}}
-refreshCallyBrand();setInterval(refreshCallyBrand,60000);
+refreshCallyBrand();setInterval(refreshCallyBrand,5000);
