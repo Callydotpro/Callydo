@@ -17,5 +17,5 @@
 <li><h3>Load Cally</h3><p>Click <strong>Load unpacked</strong> and select the extracted folder containing <code>manifest.json</code>.</p></li>
 <li><h3>Open your chart</h3><p>Review the setup page and click Agree &amp; enable Cally. Then open a pump.fun or Terminal coin page.</p></li>
 </ol></section>
-<footer><span>Cally CA: Not Announced</span><a href="/privacy">Privacy</a><a href="mailto:yournos462@gmail.com">Need help?</a></footer>
-</main></body></html>
+<footer><span id="cally-ca" style="overflow-wrap:anywhere">Cally CA: Not Announced</span><a href="https://x.com/Callydotpro" target="_blank" rel="noopener noreferrer" aria-label="Cally on X">𝕏</a><a href="/privacy">Privacy</a><a href="mailto:yournos462@gmail.com">Need help?</a></footer>
+</main><script>async function refreshBrand(){try{const r=await fetch('/brand.json',{cache:'no-store'});if(!r.ok)return;const d=await r.json();document.getElementById('cally-ca').textContent='Cally CA: '+(typeof d.ca==='string'&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(d.ca)?d.ca:'Not Announced');}catch{}}refreshBrand();setInterval(refreshBrand,5000);</script></body></html>
